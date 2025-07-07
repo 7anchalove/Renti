@@ -153,9 +153,6 @@ temp/
 *.sln
 *.sw?
 
-# Local environment files
-.env*.local
-
 # Vercel
 .vercel
 

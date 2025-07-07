@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import toast from 'react-hot-toast'
+import { useSupabase } from '@/lib/supabase-context'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -15,21 +16,21 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const { signIn } = useSupabase()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
-    // Simulate API call
-    setTimeout(() => {
-      if (email && password) {
-        toast.success('Login successful!')
-        router.push('/dashboard')
-      } else {
-        toast.error('Please fill in all fields')
-      }
+    try {
+      await signIn(email, password)
+      toast.success('Login successful!')
+      router.push('/dashboard')
+    } catch (error: any) {
+      toast.error(error.message || 'Login failed')
+    } finally {
       setIsLoading(false)
-    }, 1000)
+    }
   }
 
   return (

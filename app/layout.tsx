@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
 import Header from '@/components/layout/header'
+import { SupabaseProvider } from '@/lib/supabase-context'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,9 +20,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Header />
-        {children}
-        <Toaster position="top-right" />
+        <SupabaseProvider>
+          <Header />
+          {children}
+          <Toaster position="top-right" />
+        </SupabaseProvider>
       </body>
     </html>
   )

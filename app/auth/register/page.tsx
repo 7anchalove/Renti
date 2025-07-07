@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import toast from 'react-hot-toast'
+import { useSupabase } from '@/lib/supabase-context'
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -21,6 +22,7 @@ export default function RegisterPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const { signUp } = useSupabase()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -46,12 +48,15 @@ export default function RegisterPage() {
       return
     }
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      await signUp(formData.email, formData.password)
       toast.success('Registration successful! Please check your email to verify your account.')
       router.push('/auth/login')
+    } catch (error: any) {
+      toast.error(error.message || 'Registration failed')
+    } finally {
       setIsLoading(false)
-    }, 1000)
+    }
   }
 
   return (
